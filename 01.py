@@ -79,7 +79,7 @@ while cap.isOpened():
 
     cv2.imshow('Finger Count', frame)
 
-    # press q for exit
+    # press "q" for exit
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
