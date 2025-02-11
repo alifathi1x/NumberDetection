@@ -7,7 +7,7 @@ hands = mp_hands.Hands(max_num_hands=1, min_detection_confidence=0.7)
 mp_drawing = mp.solutions.drawing_utils
 
 
-# Function to count raised fingers
+# def for count raised fingers
 def count_fingers(hand_landmarks):
     finger_tips = [mp_hands.HandLandmark.INDEX_FINGER_TIP, mp_hands.HandLandmark.MIDDLE_FINGER_TIP,
                    mp_hands.HandLandmark.RING_FINGER_TIP, mp_hands.HandLandmark.PINKY_TIP]
@@ -19,7 +19,7 @@ def count_fingers(hand_landmarks):
 
     count = 0
 
-    # Check thumb (special case)
+    # Check thumb
     if thumb_tip.y < thumb_ip.y:
         count += 1
 
@@ -33,9 +33,8 @@ def count_fingers(hand_landmarks):
     return count
 
 
-# Function to check if the hand is in a fist position
+# def for check if the hand is in a fist position
 def is_fist(hand_landmarks):
-    # Check if all finger tips are below their corresponding PIP (proximal interphalangeal joint)
     finger_tips = [mp_hands.HandLandmark.INDEX_FINGER_TIP, mp_hands.HandLandmark.MIDDLE_FINGER_TIP,
                    mp_hands.HandLandmark.RING_FINGER_TIP, mp_hands.HandLandmark.PINKY_TIP]
     finger_pips = [mp_hands.HandLandmark.INDEX_FINGER_PIP, mp_hands.HandLandmark.MIDDLE_FINGER_PIP,
@@ -47,7 +46,6 @@ def is_fist(hand_landmarks):
     return True
 
 
-# Open webcam
 cap = cv2.VideoCapture(0)
 
 while cap.isOpened():
@@ -58,7 +56,7 @@ while cap.isOpened():
     # Flip the frame horizontally
     frame = cv2.flip(frame, 1)
 
-    # Convert the BGR image to RGB
+    #  BGR image to RGB
     rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
     # Process the frame with MediaPipe Hands
@@ -71,19 +69,17 @@ while cap.isOpened():
 
             # Check if the hand is a fist
             if is_fist(hand_landmarks):
-                # Display 0 if it's a fist
+                # if not detect fingers
                 cv2.putText(frame, '0', (50, 100), cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 255, 255), 3, cv2.LINE_AA)
             else:
-                # Count fingers otherwise
                 finger_count = count_fingers(hand_landmarks)
                 # Display the finger count
                 cv2.putText(frame, str(finger_count), (50, 100), cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 255, 255), 10,
                             cv2.LINE_AA)
 
-    # Show the frame
     cv2.imshow('Finger Count', frame)
 
-    # Break the loop if 'q' is pressed
+    # press q for exit
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
